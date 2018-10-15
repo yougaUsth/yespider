@@ -10,11 +10,14 @@ class LoginHandler(tornado.web.RequestHandler):
         pass
 
     def get(self):
+        self.post()
+
+    def post(self, *args, **kwargs):
         self.write("hello word")
 
 
 def make_app():
-    return tornado.web.Application([("/login", LoginHandler)])
+    return tornado.web.Application([("/", LoginHandler)])
 
 
 if __name__ == '__main__':
