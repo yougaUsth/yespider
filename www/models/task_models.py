@@ -14,7 +14,7 @@ class BaseTask(Document):
     """
 
     meta = {
-        "collection": "mq_job",
+        "collection": "task_config",
         "db_alias": "",
         "strict": False
     }
