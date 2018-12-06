@@ -3,12 +3,26 @@
 from __future__ import unicode_literals
 
 from flask_mongoengine import Document
-from mongoengine import StringField, BooleanField, ListField, DictField, DateTimeField, FloatField
+from mongoengine import StringField, BooleanField, ListField, DateTimeField,EmbeddedDocumentField
 
 from www.utils.time_utils import now_lambda
 
 
-class BaseTask(Document):
+class RuleModel(Document):
+    """
+    附加字段的解析规则
+    """
+    meta = {
+        "collection": "rules",
+        "db_alias": "",
+        "strict": False
+    }
+    name = StringField(required=True)  # 解析任务名
+    x_path = StringField()  # x-path 解析规则
+    re_path = StringField()  # re 解析规则
+
+
+class BaseTaskModel(Document):
     """
     任务基类
     """
@@ -19,19 +33,20 @@ class BaseTask(Document):
         "strict": False
     }
 
-    task_name = StringField()
-    start_url = StringField()
-    is_timed = BooleanField(default=False)
-    corntab = StringField(default="/* ")
+    id = StringField(required=True)
 
-    spider_name = StringField()
-    parser_name = StringField()
+    task_name = StringField()  # 任务名称
+    start_url = StringField(required=True)
 
-    title = StringField()
-    price = FloatField()
+    corntab = StringField(default="*/5 * * * * ")
 
-    parser_rules = ListField(DictField())  # 附加字段解析规则
-
+    spider_name = StringField(required=True)  # 抓取程序
+    parser_name = StringField(required=True)  # 解析程序
+    parser_rules = ListField(EmbeddedDocumentField(RuleModel))  # 附加字段解析规则
+    # creater = EmbeddedDocumentField(User)
     created_at = DateTimeField(default=now_lambda)
     update_at = DateTimeField()
     deleted_at = DateTimeField()
+
+
+
