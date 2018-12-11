@@ -22,6 +22,7 @@ class BaseSpider(object):
     def _parse_index(self, response, callback=None):
         callback = callback if callable(callback) else self._parse_article
         _extra_url = self._extra.copy()
+        # 解析response 获取链接列表
         for i, url in enumerate(self.parser.parse_index(response)):
             _meta = {}
             if isinstance(url, tuple):

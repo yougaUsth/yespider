@@ -14,6 +14,15 @@ class BaseParser(object):
     def __init__(self, name, task_id):
         self.name = name
 
+    def _parser_index(self, task_id, response):
+        """
+        解析索引列表
+        :param task_id:
+        :param response:
+        :return:
+        """
+        pass
+
     def _parser_article(self, task_id, response):
         """
         解析字段
