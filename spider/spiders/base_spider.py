@@ -34,7 +34,7 @@ class BaseSpider(object):
                 continue
             _meta['_index'] = i + 1
             url = response.urljoin(url.replace('\\/', '/'))
-            url = url.replace(':80/', '/')
+            url = url.replace(':80/', '/')  
             if self.task_id == 'test_index':
                 yield {"url": url}
                 continue
