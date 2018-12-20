@@ -22,7 +22,7 @@ class RuleModel(Document):
     re_path = StringField()  # re 解析规则
 
 
-class BaseTaskModel(Document):
+class BaseTask(Document):
     """
     任务基类
     """

@@ -6,6 +6,7 @@ import threading
 import time
 
 from config import redis_client, STATE_DISPATCH, STATE_PENDING, STATE_WAITING, UID
+from www.models.task_models import BaseTask
 
 BEAT_INTERVAL = 5
 _state_ = 2
@@ -40,8 +41,9 @@ class HeartBeat(threading.Thread):
                 main_nodes[uid] = msg.pop(uid)
             elif _s == STATE_PENDING:
                 pending_nodes[uid] = msg.pop(uid)
-
         _len = len(main_nodes)
+
+        # if no working dispatcher
         if _len == 0:
             if _state_ == STATE_WAITING:
                 if pending_nodes:
@@ -93,7 +95,7 @@ class HeartBeat(threading.Thread):
     def run(self):
         reties = 0
         while 1:
-            # redis 获取当前dispatcher 未中断进程
+            # replace mc to redis
             rmsg = self._redis.gets(self._key)
             msg = self._on_beat(rmsg)
             if msg:
@@ -112,3 +114,20 @@ class HeartBeat(threading.Thread):
                 print 'retries too much, may net error'
 
                 time.sleep(self.__expire + 1)
+
+
+def load_tasks(task_id=None):
+    """
+    加载任务池
+    :return:
+    """
+    query = dict()
+    if not task_id:
+        return
+
+    if isinstance(task_id, list):
+        query["id__in"] = task_id
+    if isinstance(task_id, basestring):
+        query["id"] = task_id
+    tasks = BaseTask.objects.filter(**query)
+
